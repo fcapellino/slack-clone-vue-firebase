@@ -47,6 +47,7 @@
         channelsRef: window.firebase.database().ref('channels'),
         channels: [],
         newChannelName: null,
+        currentChannel: null,
         errors: []
       }
     },
@@ -100,6 +101,12 @@
             self.channels.sort(function (a, b) {
               return a.name.localeCompare(b.name)
             })
+
+            if (self.channels.length) {
+              var firstChannel = self.channels[0]
+              self.currentChannel = firstChannel
+              self.$store.dispatch('setCurrentChannel', firstChannel)
+            }
           }
         })
       },

@@ -1,11 +1,11 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import vue from 'vue'
+import router from 'vue-router'
 import login from '../pages/login'
 import chat from '../pages/chat'
 
-Vue.use(Router)
+vue.use(router)
 
-export default new Router({
+export default new router({
   mode: 'history',
   routes: [
     {
