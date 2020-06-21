@@ -16,27 +16,27 @@ var firebaseConfig = appSettings.firebaseConfig
 firebase.initializeApp(firebaseConfig)
 window.firebase = firebase
 const unsubscribe = window.firebase.auth().onAuthStateChanged(function (user) {
-  store.dispatch('setUser', user)
-  startApplication()
-  unsubscribe()
+    store.dispatch('setUser', user)
+    startApplication()
+    unsubscribe()
 })
 
 // custom directives
 vue.directive('uppercase', {
-  update(el) {
-    if (el.value && typeof el.value === 'string') {
-      el.value = el.value.trim().toUpperCase()
+    update(el) {
+        if (el.value && typeof el.value === 'string') {
+            el.value = el.value.trim().toUpperCase()
+        }
     }
-  }
 })
 
 // main vue instance
 function startApplication() {
-  var mainModel = new vue({
-    el: '#app',
-    router,
-    store,
-    components: { app },
-    template: '<app/>'
-  })
+    var mainModel = new vue({
+        el: '#app',
+        router,
+        store,
+        components: { app },
+        template: '<app/>'
+    })
 }
