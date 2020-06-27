@@ -11,7 +11,7 @@
 </script>
 
 <style>
-    .btn, .form-control, .jumbotron {
+    .btn, .form-control, .jumbotron, .progress {
         border-radius: 0px;
     }
 </style>

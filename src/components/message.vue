@@ -8,9 +8,10 @@
                 <h6 class="mt-0">
                     <a href="#" style="pointer-events:none;">{{ currentMessage.user.name }}</a> - {{ fromNow(currentMessage.timestamp) }}
                 </h6>
-                <p>
+                <p v-if="currentMessage.content">
                     <mark> {{ currentMessage.content }} </mark>
                 </p>
+                <img class="file-message mb-3" v-else-if="currentMessage.fileUrl" :src="currentMessage.fileUrl" />
             </div>
         </div>
     </div>
@@ -49,5 +50,10 @@
 <style scoped>
     .my-message {
         border: 3px solid #007bff;
+    }
+
+    .file-message {
+        height: 150px;
+        border: 1px solid lightblue;
     }
 </style>

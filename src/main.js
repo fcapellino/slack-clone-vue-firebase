@@ -2,14 +2,17 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import appSettings from '../config/appsettings.json'
 import vue from 'vue'
+import vueToast from 'vue-toast-notification';
 import app from './App'
 import router from './router'
 import firebase from 'firebase/app'
 import store from './store'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import 'vue-toast-notification/dist/theme-default.css';
 
 vue.config.productionTip = false
+vue.use(vueToast)
 
 // initialize firebase
 var firebaseConfig = appSettings.firebaseConfig

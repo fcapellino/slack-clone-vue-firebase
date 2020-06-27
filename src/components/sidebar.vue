@@ -26,6 +26,11 @@
             channels,
             users
         },
+        data() {
+            return {
+                presenceRef: window.firebase.database().ref('userspresence')
+            }
+        },
         computed: {
             currentUser: function () {
                 const self = this
@@ -35,6 +40,7 @@
         methods: {
             logout: function () {
                 const self = this
+                self.presenceRef.child(self.currentUser.uid).remove()
                 window.firebase.auth().signOut()
                 self.$store.dispatch('setUser', null)
                 self.$router.push('/login')

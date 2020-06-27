@@ -21,14 +21,9 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form>
-                            <div class="form-group">
-                                <input type="text" v-model.trim="newChannelName" v-uppercase class="form-control" id="newChannel" name="newChannel" placeholder="CHANNEL NAME">
-                            </div>
-                            <ul class="list-group" v-if="hasErrors">
-                                <li class="list-group-item text-danger" v-for="(error, index) in errors" :key="index">{{ error }}</li>
-                            </ul>
-                        </form>
+                        <div class="form-group">
+                            <input type="text" v-model.trim="newChannelName" v-uppercase class="form-control" id="newChannel" name="newChannel" placeholder="CHANNEL NAME">
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" v-on:click.stop="closeModal()">Cancel</button>
@@ -50,8 +45,7 @@
             return {
                 channelsRef: window.firebase.database().ref('channels'),
                 channels: [],
-                newChannelName: null,
-                errors: []
+                newChannelName: null
             }
         },
         mounted: function () {
@@ -63,13 +57,13 @@
             self.removeAllListeners()
         },
         computed: {
+            currentUser: function () {
+                const self = this
+                return self.$store.getters.getCurrentUser
+            },
             currentChannel: function () {
                 const self = this
                 return self.$store.getters.getCurrentChannel
-            },
-            hasErrors: function () {
-                const self = this
-                return !!self.errors.length
             }
         },
         methods: {
@@ -80,14 +74,20 @@
                 const self = this
                 $('#channelModal').modal('hide')
                 self.newChannelName = null
-                self.errors = []
             },
             saveChannelToRef: function () {
                 const self = this
+                // #region VALIDATIONS
+                if (utils.isNullOrEmpty(self.newChannelName)) {
+                    return
+                }
+                // #endregion
+
                 var key = self.channelsRef.push().key
                 var newChannel = {
                     id: utils.tryGet(() => key),
-                    name: utils.tryGet(() => self.newChannelName.toUpperCase()) || null
+                    name: utils.tryGet(() => self.newChannelName.toUpperCase()) || null,
+                    private: false
                 }
 
                 self.channelsRef.child(key).update(newChannel)
@@ -97,7 +97,7 @@
                         $('#channelModal').modal('hide')
                     })
                     .catch(function (error) {
-                        self.errors.push(error.message)
+                        self.$toast.error(error.message, { position: 'top' })
                     })
             },
             addListeners: function () {
