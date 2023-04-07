@@ -1,0 +1,81 @@
+{
+    "rules": {
+        "users": {
+            ".read": "auth != null",
+            "$uid": {
+                ".write": "auth != null && auth.uid===$uid",
+                ".validate": "newData.hasChildren(['name','avatar'])",
+                "name": {
+                    ".validate": "newData.val().length>0"
+                },
+                "avatar": {
+                    ".validate": "newData.val().length>0"
+                }
+            }
+        },
+        "userspresence": {
+            ".read": "auth != null",
+            ".write": "auth != null"
+        },
+        "channels": {
+            ".read": "auth != null",
+            "$channelId": {
+                ".write": "auth != null",
+                ".validate": "newData.hasChildren(['id','name','private'])",
+                "id": {
+                    ".validate": "newData.val() === $channelId"
+                },
+                "name": {
+                    ".validate": "newData.val() !==null && newData.val().length>0"
+                },
+                "private": {
+                    ".validate": "newData.val() === false"
+                }
+            }
+        },
+        "messages": {
+            "$channelId": {
+                ".read": "auth != null",
+                ".validate": "root.child('channels/'+$channelId).exists()",
+                "$messageId": {
+                    ".write": "auth != null",
+                    ".validate": "newData.hasChildren(['content','user','timestamp']) || newData.hasChildren(['fileUrl','user','timestamp'])",
+                    "content": {
+                        ".validate": "newData.val() !==null && newData.val().length>0"
+                    },
+                    "fileUrl": {
+                        ".validate": "newData.val() !==null && newData.val().length>0"
+                    },
+                    "user": {
+                        ".validate": "newData.hasChildren(['id','name','avatar'])",
+                        "id": {
+                            ".validate": "newData.val() === auth.uid"
+                        }
+                    }
+                }
+            }
+        },
+        "privateMessages": {
+            "$channelId": {
+                ".read": "auth != null",
+                ".validate": "$channelId.contains(auth.uid)",
+                "$messageId": {
+                    ".write": "auth != null",
+                    ".validate": "newData.hasChildren(['content','user','timestamp']) || newData.hasChildren(['fileUrl','user','timestamp'])",
+                    "content": {
+                        ".validate": "newData.val() !==null && newData.val().length>0"
+                    },
+                    "fileUrl": {
+                        ".validate": "newData.val() !==null && newData.val().length>0"
+                    },
+                    "user": {
+                        ".validate": "newData.hasChildren(['id','name','avatar'])",
+                        "id": {
+                            ".validate": "newData.val() === auth.uid"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
